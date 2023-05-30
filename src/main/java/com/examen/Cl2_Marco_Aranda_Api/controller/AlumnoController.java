@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +31,35 @@ public class AlumnoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Alumno> obtenerespecialidadXid(@PathVariable("id") String id){
+    public ResponseEntity<Alumno> obtenereAlumnoXid(@PathVariable("id") String id){
         return new ResponseEntity<>(alumnoService.buscarAlumxId(id).get(),HttpStatus.OK);
+    }
+
+    @PostMapping("")
+public ResponseEntity<Alumno> crearAlumno(@RequestBody Alumno alumno){
+        Alumno newAlumno = new Alumno();
+        newAlumno.setApealumno(alumno.getApealumno());
+        newAlumno.setNomalumno(alumno.getNomalumno());
+        newAlumno.setEspecialidad(alumno.getEspecialidad());
+        newAlumno.setProce(alumno.getProce());
+                return new ResponseEntity<>(alumnoService.registrar(newAlumno),HttpStatus.CREATED);
+}
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Alumno> ActualizarAlumno(@PathVariable("id") String id
+                                                   ,@RequestBody Alumno alumno){
+        Alumno oldAlumno = alumnoService.buscarAlumxId(id).get();
+
+        oldAlumno.setApealumno(alumno.getApealumno());
+        oldAlumno.setNomalumno(alumno.getNomalumno());
+
+        oldAlumno.setProce(alumno.getProce());
+        return new ResponseEntity<>(alumnoService.registrar(oldAlumno),HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarAlumno(@PathVariable("id") String id){
+        return ResponseEntity.status(HttpStatus.OK).body(alumnoService.eliminar(id));
     }
 
 }
